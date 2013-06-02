@@ -75,16 +75,15 @@ class PackagesController < ApplicationController
 	end
 
 	def create
-		apiKey = request.headers["X-NuGet-ApiKey"]
-
-		if not check_api_key apiKey
-			render :status => :forbidden, :text => "Bad API Key"
-			return
-		end
-		
+		apiKey = ApiKey.from_key request.headers["X-NuGet-ApiKey"]
 		package = params[:package]
 		npkg = NugetPackage.new package.tempfile
 		m = PackageMetadata.from_nuget npkg
+
+		if apiKey.nil? or not apiKey.can_publish? m.name
+			render :status => :forbidden, :text => "Bad API Key"
+			return
+		end
 	
 		dest = File.join(Rails.root, "public/Packages/#{m.name}.#{m.version}.nupkg")
 		File.open(dest, "wb") { |f| f.write(package.read) }
@@ -95,9 +94,9 @@ class PackagesController < ApplicationController
 	end
 
 	def delete
-		apiKey = request.headers["X-NuGet-ApiKey"]
+		apiKey = ApiKey.from_key request.headers["X-NuGet-ApiKey"]
 
-		if not check_api_key apiKey
+		if apiKey.nil? or not apiKey.can_delete? params[:package_id]
 			render :status => :forbidden, :text => "Bad API Key"
 			return
 		end
@@ -113,10 +112,6 @@ class PackagesController < ApplicationController
 		@rootGroup.flush_cache
 
 		render :xml => '<ok/>'
-	end
-
-	def check_api_key key
-		key == "supersecret"
 	end
 
 	private
