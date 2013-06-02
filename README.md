@@ -30,7 +30,7 @@ I've tested rails-nuget with passenger and WEBrick.
 
 Once you're running the server, you can point your Nuget package manager at `/api/v2/`. For example, `http://localhost:3000/api/v2/` if you're just using `rails server`.
 
-#### Managing API keys
+### Managing API keys
 
 In rails-nuget, each API key has an associated regular expression, and 3 flags: read, publish and delete. A key has access to read, publish or delete packages whose id matches
 it's regular expression.
