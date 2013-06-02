@@ -27,6 +27,7 @@ GEM
       tzinfo (~> 0.3.33)
     arel (4.0.0)
     atomic (1.1.9)
+    blankslate (2.1.2.4)
     builder (3.1.4)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -52,6 +53,9 @@ GEM
     mime-types (1.23)
     minitest (4.7.4)
     multi_json (1.7.4)
+    nokogiri (1.5.9)
+    parslet (1.5.0)
+      blankslate (~> 2.0)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -73,6 +77,7 @@ GEM
     rake (10.0.4)
     rdoc (3.12.2)
       json (~> 1.4)
+    rubyzip (0.9.9)
     sass (3.2.9)
     sass-rails (4.0.0.rc1)
       railties (>= 4.0.0.beta, < 5.0)
@@ -110,7 +115,10 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0.beta1)
   jbuilder (~> 1.0.1)
   jquery-rails
+  nokogiri
+  parslet
   rails (= 4.0.0.beta1)
+  rubyzip
   sass-rails (~> 4.0.0.beta1)
   sqlite3
   turbolinks

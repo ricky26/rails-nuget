@@ -1,17 +1,28 @@
 Nuget::Application.routes.draw do
 	# API
-	namespace :api do
-		namespace :v2 do
-			namespace :package do
-				put '/' => 'packages#create'
-				delete '/:package_id/:version' => 'packages#delete'
-				get '/:package_id/:version' => 'package#show'
-			end
+
+	def api
+		scope '/package' do
+			put '' => 'packages#create', :as => :create_package
+			delete ':package_id/:version' => 'packages#delete', :constraints => { :package_id => /[^\/]*/, :version => /[^\/]*/ }, :as => :delete_package
+			get ':package_id/:version' => 'packages#show', :constraints => { :package_id => /[^\/]*/, :version => /[^\/]*/ }, :as => :show_package
+		end
+
+		put '' => 'packages#create', :as => :create_package
+		delete ':package_id/:version' => 'packages#delete', :constraints => { :package_id => /[^\/]*/, :version => /[^\/]*/ }, :as => :delete_package
+		get ':package_id/:version' => 'packages#show', :constraints => { :package_id => /[^\/]*/, :version => /[^\/]*/ }, :as => :show_package
+
+		get ':metadata' => 'packages#metadata', :constraints => { :metadata => /\$metadata/ }
+		get ':area' => 'packages#index', :defaults => { :format => 'xml' },
+				:constraints => { :area => /.*/ }, :as => :packages
+		root :to => 'packages#index', :defaults => { :format => 'xml' }
+	end
+
+	scope '/api' do
+		scope '/v2' do
+			api
 		end
 	end
 
-	put '/' => 'packages#create'
-	delete '/:package_id/:version' => 'packages#delete'
-
-	get 'Packages' => 'packages#index'
+	root :to => 'home#index'
 end
