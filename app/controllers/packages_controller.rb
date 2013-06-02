@@ -89,7 +89,7 @@ class PackagesController < ApplicationController
 		dest = File.join(Rails.root, "public/Packages/#{m.name}.#{m.version}.nupkg")
 		File.open(dest, "wb") { |f| f.write(package.read) }
 
-		# TODO: flush cache!
+		@rootGroup.flush_cache
 
 		render :xml => '<ok/>'
 	end
@@ -110,7 +110,7 @@ class PackagesController < ApplicationController
 
 		File.delete package.file
 
-		# TODO: flush cache!
+		@rootGroup.flush_cache
 
 		render :xml => '<ok/>'
 	end

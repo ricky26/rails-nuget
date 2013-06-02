@@ -5,11 +5,19 @@ class PackageGroup
 		@name = name
 		@title = options[:title] || name
 
-		@packages = Rails.cache.fetch "package_group_#{name}_packages", :expires_in => 30.seconds, :force => true do
+		@packages = Rails.cache.fetch cache_key, :expires_in => 30.seconds do
 			Dir.glob("#{source_dir}/*.nupkg").inject([]) do |r, f|
 				r << Package.from_file(f)
 			end
 		end
+	end
+
+	def cache_key
+		"package_group_#{name}_packages"
+	end
+
+	def flush_cache
+		Rails.cache.delete cache_key
 	end
 
 	def source_dir	
