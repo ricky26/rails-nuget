@@ -9,18 +9,14 @@ Clone this repository somewhere:
 git clone git@github.com:ricky26/rails-nuget.git nuget
 ```
 
-Change the API key, look for this in app/controllers/packages_controller.rb:
-```
-key == "supersecret"
-```
-And replace with a key of your own:
-```
-key == "my_api_key"
-```
-
 Install dependencies:
 ```
 bundle install
+```
+
+Create the database:
+```
+rake db:migrate
 ```
 
 Start the rails server:
@@ -33,6 +29,36 @@ I've tested rails-nuget with passenger and WEBrick.
 ## Usage
 
 Once you're running the server, you can point your Nuget package manager at `/api/v2/`. For example, `http://localhost:3000/api/v2/` if you're just using `rails server`.
+
+#### Managing API keys
+
+In rails-nuget, each API key has an associated regular expression, and 3 flags: read, publish and delete. A key has access to read, publish or delete packages whose id matches
+it's regular expression.
+
+#### Adding API keys
+
+API keys can be added with `rake`. To add a simple all-access key, do:
+```
+rake db:add_api_key
+```
+
+To add a read/write (but not delete) key:
+```
+rake db:add_api_key["rp"]
+```
+
+To add a read/publish/delete key, with a regular expression:
+```
+rake db:add_api_key["rpd", "^com\\.mycompany\\."]
+```
+
+#### Deleting API keys
+
+To delete an API key, you can also use rake:
+```
+rake db:remove_api_key["API KEY"]
+```
+Note: this task takes no confirmation, and will immediately remove the key in question.
 
 ### Adding/Removing packages
 
